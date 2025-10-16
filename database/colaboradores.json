@@ -1,0 +1,113 @@
+[
+  {
+    "id": 1,
+    "nome": "Ray davidson",
+    "cargo": "Barbeiro S�nior",
+    "telefone": "(11) 99999-9999",
+    "email": "ray@barbearianativa.com",
+    "status": "Treinamento",
+    "servicos_semana": 15,
+    "avaliacao": 4.9,
+    "data_cadastro": "2023-01-15",
+    "username": "ray",
+    "password": "$2b$12$c9MZSOtIxtD1krAp7RWjb.XheYMyPVS4i6M5xrtp1vjtjbehmF8kK",
+    "role": "colaborador",
+    "especialidades": [
+      "Corte",
+      "Barba",
+      "Pacote Completo"
+    ],
+    "horario_trabalho": {
+      "segunda": "08:00-18:00",
+      "terca": "08:00-18:00",
+      "quarta": "08:00-18:00",
+      "quinta": "08:00-18:00",
+      "sexta": "08:00-18:00",
+      "sabado": "08:00-14:00",
+      "domingo": "Fechado"
+    },
+    "observacoes": "Especialista em cortes modernos e tradicionais"
+  },
+  {
+    "id": 2,
+    "nome": "Carlos Oliveira",
+    "cargo": "Barbeiro",
+    "telefone": "(11) 98888-8888",
+    "email": "carlos@barbearianativa.com",
+    "status": "Ativo",
+    "servicos_semana": 12,
+    "avaliacao": 4.6,
+    "data_cadastro": "2023-03-20",
+    "username": "carlos",
+    "password": "$2b$12$i3goCLAoMVnRXKWnzViRdO0NSGbI.k2U594lvHqJ35aNmnByKNG2e",
+    "role": "colaborador",
+    "especialidades": [
+      "Corte",
+      "Barba"
+    ],
+    "horario_trabalho": {
+      "segunda": "09:00-17:00",
+      "terca": "09:00-17:00",
+      "quarta": "09:00-17:00",
+      "quinta": "09:00-17:00",
+      "sexta": "09:00-17:00",
+      "sabado": "09:00-13:00",
+      "domingo": "Fechado"
+    },
+    "observacoes": "Experiência em barboterapia"
+  },
+  {
+    "id": 3,
+    "nome": "André Santos",
+    "cargo": "Aprendiz",
+    "telefone": "(11) 97777-7777",
+    "email": "andre@barbearianativa.com",
+    "status": "Treinamento",
+    "servicos_semana": 6,
+    "avaliacao": 4.2,
+    "data_cadastro": "2023-06-10",
+    "username": "andre",
+    "password": "$2b$12$QjUa1fDp/45wFwpZIjgcd.slIapHMjgMVM3yNt1q15XOCx8ZjzDQy",
+    "role": "colaborador",
+    "especialidades": [
+      "Corte Básico"
+    ],
+    "horario_trabalho": {
+      "segunda": "10:00-16:00",
+      "terca": "10:00-16:00",
+      "quarta": "10:00-16:00",
+      "quinta": "10:00-16:00",
+      "sexta": "10:00-16:00",
+      "sabado": "Fechado",
+      "domingo": "Fechado"
+    },
+    "observacoes": "Em treinamento, supervisionado pelo João"
+  },
+  {
+    "id": 4,
+    "nome": "Administrador",
+    "cargo": "Administrador",
+    "telefone": "(11) 99999-0000",
+    "email": "admin@barbearianativa.com",
+    "status": "Ativo",
+    "servicos_semana": 0,
+    "avaliacao": 0,
+    "data_cadastro": "2023-01-01",
+    "username": "admin",
+    "password": "$2b$12$ChAn8cbZ4LnR.5xURj3fi.lcH9aSMXr90rCbU6CINm8PV12/G1diu",
+    "role": "admin",
+    "especialidades": [
+      "Administração"
+    ],
+    "horario_trabalho": {
+      "segunda": "08:00-18:00",
+      "terca": "08:00-18:00",
+      "quarta": "08:00-18:00",
+      "quinta": "08:00-18:00",
+      "sexta": "08:00-18:00",
+      "sabado": "08:00-18:00",
+      "domingo": "08:00-18:00"
+    },
+    "observacoes": "Administrador do sistema"
+  }
+]

@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Admin - Barbearia Nativa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1rem 1.5rem;
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            color: white;
+        }
+        
+        .btn-danger-custom {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            color: white;
+        }
+        
+        .btn-success-custom {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+            color: white;
+        }
+        
+        .qr-code-container {
+            max-width: 350px;
+            margin: 0 auto;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            padding: 1rem;
+        }
+        
+        .qr-code-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .qr-code-container img {
+            border-radius: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .status-connected {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-disconnected {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .status-connecting {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        
+        .log-entry {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .log-info {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+        }
+        
+        .log-success {
+            background-color: #e8f5e8;
+            border-left-color: #4caf50;
+        }
+        
+        .log-warning {
+            background-color: #fff3e0;
+            border-left-color: #ff9800;
+        }
+        
+        .log-error {
+            background-color: #ffebee;
+            border-left-color: #f44336;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fab fa-whatsapp"></i> WhatsApp Admin</h1>
+                    <p class="mb-0">Sistema de mensagens automáticas - Barbearia Nativa</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <a href="./colaborador.html" class="btn btn-light" id="backToAdminBtn" onclick="window.location.href='./colaborador.html';">
+                        <i class="fas fa-arrow-left"></i> Voltar ao Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Status da Conexão -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-signal"></i> Status da Conexão</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Status:</strong> <span id="connectionStatus">Verificando...</span></p>
+                        <p class="mb-0"><strong>Usuário:</strong> <span id="connectedUser">Não conectado</span></p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-whatsapp me-2" id="connectBtn">
+                            <i class="fas fa-plug"></i> Conectar
+                        </button>
+                        <button class="btn btn-danger-custom" id="disconnectBtn">
+                            <i class="fas fa-unlink"></i> Desconectar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Escolha do Método de Conexão -->
+        <div class="card hidden" id="connectionMethodCard">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-mobile-alt"></i> Escolha o Método de Conexão</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-primary">
+                            <div class="card-body text-center">
+                                <i class="fas fa-qrcode fa-3x text-primary mb-3"></i>
+                                <h5>QR Code</h5>
+                                <p class="text-muted small">Tenho 2 dispositivos (PC + Celular)</p>
+                                <button class="btn btn-primary w-100" id="useQRCodeBtn">
+                                    Usar QR Code
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 border-success">
+                            <div class="card-body text-center">
+                                <i class="fas fa-key fa-3x text-success mb-3"></i>
+                                <h5>Código de 8 Dígitos</h5>
+                                <p class="text-muted small">Tenho apenas 1 celular</p>
+                                <button class="btn btn-success w-100" id="usePairingCodeBtn">
+                                    Usar Código
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Code para Conexão -->
+        <div class="card hidden" id="qrCodeCard">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-qrcode"></i> QR Code para Conectar</h5>
+            </div>
+            <div class="card-body text-center">
+                <p class="text-muted">Escaneie este QR Code com seu WhatsApp</p>
+                <div class="qr-code-container" id="qrCodeContainer">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p class="mt-2">Gerando QR Code...</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-whatsapp me-2" id="clearSessionBtn">
+                        <i class="fas fa-trash"></i> Limpar Sessão
+                    </button>
+                    <button class="btn btn-outline-secondary" id="backToMethodBtn">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pairing Code para Conexão -->
+        <div class="card hidden" id="pairingCodeCard">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-key"></i> Código de Pareamento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mx-auto">
+                        <div class="mb-3">
+                            <label for="phoneNumberInput" class="form-label">Número do WhatsApp</label>
+                            <input type="tel" class="form-control form-control-lg text-center" id="phoneNumberInput" 
+                                   placeholder="5511999999999" maxlength="13">
+                            <small class="text-muted">Formato: 55 + DDD + Número</small>
+                        </div>
+                        <button class="btn btn-success w-100 mb-3" id="generatePairingCodeBtn">
+                            <i class="fas fa-key"></i> Gerar Código
+                        </button>
+                        
+                        <div class="hidden" id="pairingCodeDisplay">
+                            <div class="alert alert-success text-center">
+                                <h3 class="mb-3">Seu Código:</h3>
+                                <h1 class="display-3 fw-bold" id="pairingCodeText">XXXX-XXXX</h1>
+                                <hr>
+                                <p class="mb-2"><strong>Como usar:</strong></p>
+                                <ol class="text-start">
+                                    <li>Abra o WhatsApp no seu celular</li>
+                                    <li>Toque em Menu (3 pontos) → "Aparelhos conectados"</li>
+                                    <li>Toque em "Conectar um aparelho"</li>
+                                    <li>Toque em "Conectar com número de telefone"</li>
+                                    <li>Digite o código acima</li>
+                                </ol>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-outline-secondary w-100" id="backFromPairingBtn">
+                            <i class="fas fa-arrow-left"></i> Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas de Agendamentos -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> Agendamentos de Hoje</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3 bg-light rounded">
+                            <h2 class="mb-0" id="totalToday">-</h2>
+                            <small class="text-muted">Total Hoje</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3 bg-warning bg-opacity-10 rounded">
+                            <h2 class="mb-0 text-warning" id="pendingToday">-</h2>
+                            <small class="text-muted">Pendentes</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3 bg-success bg-opacity-10 rounded">
+                            <h2 class="mb-0 text-success" id="confirmedToday">-</h2>
+                            <small class="text-muted">Confirmados</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3 bg-danger bg-opacity-10 rounded">
+                            <h2 class="mb-0 text-danger" id="cancelledToday">-</h2>
+                            <small class="text-muted">Cancelados</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Funcionalidades de Negócio -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-business-time"></i> Funcionalidades de Negócio</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-success-custom" id="sendConfirmationsBtn">
+                                <i class="fas fa-check-circle"></i> Enviar Confirmações do Dia
+                                <span class="badge bg-white text-success ms-2" id="pendingBadge">0</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-danger-custom" id="cancelConfirmationsBtn">
+                                <i class="fas fa-times-circle"></i> Cancelar Confirmações do Dia
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relatórios -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Relatórios</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-whatsapp" id="sendReportDailyBtn">
+                                <i class="fas fa-calendar-day"></i> Relatório Diário
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-whatsapp" id="sendReportWeeklyBtn">
+                                <i class="fas fa-calendar-week"></i> Relatório Semanal
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="d-grid">
+                            <button class="btn btn-whatsapp" id="sendReportMonthlyBtn">
+                                <i class="fas fa-calendar-alt"></i> Relatório Mensal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logs do Sistema -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-list-alt"></i> Logs do Sistema</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">Últimas atividades do sistema</span>
+                    <button class="btn btn-outline-secondary btn-sm" id="clearLogsBtn">
+                        <i class="fas fa-trash"></i> Limpar Logs
+                    </button>
+                </div>
+                <div id="logsContainer" style="max-height: 400px; overflow-y: auto;">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-spinner fa-spin"></i> Carregando logs...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Container -->
+    <div id="alertContainer" class="position-fixed" style="top: 20px; right: 20px; z-index: 9999;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        class WhatsAppAdmin {
+            constructor() {
+                this.isConnected = false;
+                this.isConnecting = false;
+                this.statusInterval = null;
+                this.initializeElements();
+                this.bindEvents();
+                this.loadStatus();
+                this.loadLogs();
+                this.loadTodayStats(); // Carregar estatísticas
+                this.startStatusPolling(); // Iniciar atualização automática
+            }
+
+            initializeElements() {
+                // Status elements
+                this.connectionStatus = document.getElementById('connectionStatus');
+                this.connectedUser = document.getElementById('connectedUser');
+                this.connectBtn = document.getElementById('connectBtn');
+                this.disconnectBtn = document.getElementById('disconnectBtn');
+
+                // Connection method elements
+                this.connectionMethodCard = document.getElementById('connectionMethodCard');
+                this.useQRCodeBtn = document.getElementById('useQRCodeBtn');
+                this.usePairingCodeBtn = document.getElementById('usePairingCodeBtn');
+
+                // QR Code elements
+                this.qrCodeCard = document.getElementById('qrCodeCard');
+                this.qrCodeContainer = document.getElementById('qrCodeContainer');
+                this.backToMethodBtn = document.getElementById('backToMethodBtn');
+
+                // Pairing Code elements
+                this.pairingCodeCard = document.getElementById('pairingCodeCard');
+                this.phoneNumberInput = document.getElementById('phoneNumberInput');
+                this.generatePairingCodeBtn = document.getElementById('generatePairingCodeBtn');
+                this.pairingCodeDisplay = document.getElementById('pairingCodeDisplay');
+                this.pairingCodeText = document.getElementById('pairingCodeText');
+                this.backFromPairingBtn = document.getElementById('backFromPairingBtn');
+
+                // Business functionality
+                this.sendConfirmationsBtn = document.getElementById('sendConfirmationsBtn');
+                this.cancelConfirmationsBtn = document.getElementById('cancelConfirmationsBtn');
+
+                // Reports
+                this.sendReportDailyBtn = document.getElementById('sendReportDailyBtn');
+                this.sendReportWeeklyBtn = document.getElementById('sendReportWeeklyBtn');
+                this.sendReportMonthlyBtn = document.getElementById('sendReportMonthlyBtn');
+
+                // Logs
+                this.logsContainer = document.getElementById('logsContainer');
+                this.clearLogsBtn = document.getElementById('clearLogsBtn');
+
+                // Session management
+                this.clearSessionBtn = document.getElementById('clearSessionBtn');
+            }
+
+            bindEvents() {
+                // Connection events
+                this.connectBtn.addEventListener('click', () => this.showConnectionMethod());
+                this.disconnectBtn.addEventListener('click', () => this.disconnect());
+
+                // Connection method selection
+                this.useQRCodeBtn.addEventListener('click', () => this.connectWithQRCode());
+                this.usePairingCodeBtn.addEventListener('click', () => this.showPairingCodeCard());
+                this.backToMethodBtn.addEventListener('click', () => this.backToMethodSelection());
+                this.backFromPairingBtn.addEventListener('click', () => this.backToMethodSelection());
+
+                // Pairing code generation
+                this.generatePairingCodeBtn.addEventListener('click', () => this.connectWithPairingCode());
+
+                // Business functionality events
+                this.sendConfirmationsBtn.addEventListener('click', () => this.sendConfirmations());
+                this.cancelConfirmationsBtn.addEventListener('click', () => this.cancelConfirmations());
+
+                // Reports events
+                this.sendReportDailyBtn.addEventListener('click', () => this.sendReportDaily());
+                this.sendReportWeeklyBtn.addEventListener('click', () => this.sendReportWeekly());
+                this.sendReportMonthlyBtn.addEventListener('click', () => this.sendReportMonthly());
+
+                // Session management events
+                this.clearSessionBtn.addEventListener('click', () => this.clearSession());
+                this.clearLogsBtn.addEventListener('click', () => this.clearLogs());
+            }
+
+            async loadStatus() {
+                try {
+                    const response = await fetch('/api/whatsapp/status');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.updateStatus(result.data);
+                    } else {
+                        this.showAlert('Erro ao carregar status', 'danger');
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar status:', error);
+                    this.showAlert('Erro ao carregar status do sistema', 'danger');
+                }
+            }
+            
+            // Carregar estatísticas de agendamentos de hoje
+            async loadTodayStats() {
+                try {
+                    const response = await fetch('/api/whatsapp/today-appointments');
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        const appointments = result.data;
+                        
+                        const total = appointments.length;
+                        const pending = appointments.filter(a => a.status === 'Agendado' || a.status === 'pendente').length;
+                        const confirmed = appointments.filter(a => a.status === 'confirmado').length;
+                        const cancelled = appointments.filter(a => a.status === 'cancelado' || a.status === 'Cancelado').length;
+                        
+                        document.getElementById('totalToday').textContent = total;
+                        document.getElementById('pendingToday').textContent = pending;
+                        document.getElementById('confirmedToday').textContent = confirmed;
+                        document.getElementById('cancelledToday').textContent = cancelled;
+                        document.getElementById('pendingBadge').textContent = pending;
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar estatísticas:', error);
+                }
+            }
+            
+            // Auto-refresh de status a cada 10 segundos
+            startStatusPolling() {
+                this.statusInterval = setInterval(() => {
+                    this.loadStatus();
+                    this.loadTodayStats(); // Atualizar estatísticas também
+                }, 10000);
+                console.log('✅ Auto-refresh de status iniciado (10s)');
+            }
+            
+            stopStatusPolling() {
+                if (this.statusInterval) {
+                    clearInterval(this.statusInterval);
+                    console.log('⏹️ Auto-refresh de status parado');
+                }
+            }
+
+            updateStatus(data) {
+                this.isConnected = data.isConnected;
+                this.isConnecting = data.isConnecting;
+
+                // Update status display
+                if (data.isConnected) {
+                    this.connectionStatus.innerHTML = '<span class="status-connected">Conectado</span>';
+                    this.connectedUser.textContent = data.user ? data.user.name || data.user.id : 'Usuário conectado';
+                    this.connectBtn.style.display = 'none';
+                    this.disconnectBtn.style.display = 'inline-block';
+                    // Esconder todos os cards de conexão
+                    this.connectionMethodCard.classList.add('hidden');
+                    this.qrCodeCard.classList.add('hidden');
+                    this.pairingCodeCard.classList.add('hidden');
+                } else if (data.isConnecting) {
+                    this.connectionStatus.innerHTML = '<span class="status-connecting">Conectando...</span>';
+                    this.connectedUser.textContent = 'Conectando...';
+                    this.connectBtn.style.display = 'none';
+                    this.disconnectBtn.style.display = 'inline-block';
+                } else {
+                    this.connectionStatus.innerHTML = '<span class="status-disconnected">Desconectado</span>';
+                    this.connectedUser.textContent = 'Não conectado';
+                    this.connectBtn.style.display = 'inline-block';
+                    this.disconnectBtn.style.display = 'none';
+                    
+                    // Show QR code if available
+                    if (data.hasQRCode && data.qrCode) {
+                        this.showQRCode(data.qrCode);
+                    } else if (data.hasPairingCode && data.pairingCode) {
+                        // Mostrar pairing code se disponível
+                        this.pairingCodeDisplay.classList.remove('hidden');
+                        this.pairingCodeText.textContent = data.pairingCode;
+                    } else {
+                        this.qrCodeCard.classList.add('hidden');
+                        this.pairingCodeCard.classList.add('hidden');
+                    }
+                }
+            }
+
+            showQRCode(qrCodeData) {
+                this.qrCodeCard.classList.remove('hidden');
+                this.qrCodeContainer.innerHTML = `
+                    <img src="${qrCodeData}" alt="QR Code WhatsApp" class="img-fluid">
+                `;
+            }
+
+            // Mostrar seleção de método de conexão
+            showConnectionMethod() {
+                this.connectionMethodCard.classList.remove('hidden');
+                this.qrCodeCard.classList.add('hidden');
+                this.pairingCodeCard.classList.add('hidden');
+            }
+
+            // Voltar para seleção de método
+            backToMethodSelection() {
+                this.connectionMethodCard.classList.remove('hidden');
+                this.qrCodeCard.classList.add('hidden');
+                this.pairingCodeCard.classList.add('hidden');
+            }
+
+            // Mostrar card de pairing code
+            showPairingCodeCard() {
+                this.connectionMethodCard.classList.add('hidden');
+                this.pairingCodeCard.classList.remove('hidden');
+                this.pairingCodeDisplay.classList.add('hidden');
+            }
+
+            // Conectar com QR Code
+            async connectWithQRCode() {
+                this.connectionMethodCard.classList.add('hidden');
+                this.connect();
+            }
+
+            // Conectar com Pairing Code
+            async connectWithPairingCode() {
+                const phoneNumber = this.phoneNumberInput.value.trim();
+                
+                if (!phoneNumber || phoneNumber.length < 12) {
+                    this.showAlert('Digite um número válido (Ex: 5511999999999)', 'danger');
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.generatePairingCodeBtn);
+                    
+                    const response = await fetch('/api/whatsapp/connect', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phoneNumber })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('Conexão iniciada! Aguarde o código...', 'success');
+                        this.pollForPairingCode();
+                    } else {
+                        this.showAlert(`Erro: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao conectar', 'danger');
+                } finally {
+                    this.hideLoading(this.generatePairingCodeBtn);
+                }
+            }
+
+            // Poll para pairing code
+            async pollForPairingCode() {
+                let attempts = 0;
+                const maxAttempts = 10;
+
+                const poll = async () => {
+                    if (attempts >= maxAttempts) {
+                        this.showAlert('Timeout: Código não foi gerado', 'warning');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/api/whatsapp/pairing-code');
+                        const result = await response.json();
+
+                        if (result.success && result.data.hasPairingCode) {
+                            this.pairingCodeDisplay.classList.remove('hidden');
+                            this.pairingCodeText.textContent = result.data.pairingCode;
+                            this.showAlert('✅ Código gerado! Digite no WhatsApp.', 'success');
+                            return;
+                        }
+
+                        attempts++;
+                        setTimeout(poll, 2000);
+                    } catch (error) {
+                        attempts++;
+                        setTimeout(poll, 2000);
+                    }
+                };
+
+                poll();
+            }
+
+            async connect() {
+                try {
+                    this.showLoading(this.connectBtn);
+                    
+                    const response = await fetch('/api/whatsapp/connect', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('Conexão iniciada! Escaneie o QR Code quando aparecer.', 'success');
+                        this.loadStatus();
+                        
+                        // Poll for QR code
+                        this.pollForQRCode();
+                    } else {
+                        this.showAlert(`Erro ao conectar: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao conectar ao WhatsApp', 'danger');
+                } finally {
+                    this.hideLoading(this.connectBtn);
+                }
+            }
+
+            async disconnect() {
+                if (!confirm('Tem certeza que deseja desconectar do WhatsApp?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.disconnectBtn);
+                    
+                    const response = await fetch('/api/whatsapp/disconnect', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('WhatsApp desconectado com sucesso!', 'success');
+                        this.loadStatus();
+                    } else {
+                        this.showAlert(`Erro ao desconectar: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao desconectar do WhatsApp', 'danger');
+                } finally {
+                    this.hideLoading(this.disconnectBtn);
+                }
+            }
+
+            async clearSession() {
+                if (!confirm('Tem certeza que deseja limpar a sessão? Isso irá desconectar e remover todos os dados de autenticação.')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.clearSessionBtn);
+                    
+                    const response = await fetch('/api/whatsapp/clear-session', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('Sessão limpa com sucesso!', 'success');
+                        this.loadStatus();
+                    } else {
+                        this.showAlert(`Erro ao limpar sessão: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao limpar sessão', 'danger');
+                } finally {
+                    this.hideLoading(this.clearSessionBtn);
+                }
+            }
+
+            async pollForQRCode() {
+                let attempts = 0;
+                const maxAttempts = 30;
+
+                const poll = async () => {
+                    if (attempts >= maxAttempts) {
+                        this.showAlert('Timeout: QR Code não foi gerado', 'warning');
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('/api/whatsapp/qr-code');
+                        const result = await response.json();
+
+                        console.log('QR Code response:', result);
+
+                        if (result.success && result.data.hasQRCode && result.data.qrCode) {
+                            this.showQRCode(result.data.qrCode);
+                            return; // Stop polling
+                        }
+
+                        attempts++;
+                        console.log(`Tentativa ${attempts}/${maxAttempts} - QR Code não disponível ainda`);
+                        setTimeout(poll, 2000); // Poll every 2 seconds
+                    } catch (error) {
+                        console.error('Erro ao buscar QR Code:', error);
+                        attempts++;
+                        setTimeout(poll, 2000);
+                    }
+                };
+
+                poll();
+            }
+
+            async sendConfirmations() {
+                if (!this.isConnected) {
+                    this.showAlert('WhatsApp não está conectado', 'warning');
+                    return;
+                }
+
+                if (!confirm('Enviar confirmações para todos os agendamentos pendentes de hoje?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.sendConfirmationsBtn);
+                    
+                    const response = await fetch('/api/whatsapp/send-bulk-confirmations', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert(`✅ ${result.data.sent} confirmações enviadas de ${result.data.total} agendamentos!`, 'success');
+                        this.loadLogs();
+                        this.loadTodayStats(); // Atualizar estatísticas
+                    } else {
+                        this.showAlert(`Erro ao enviar confirmações: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao enviar confirmações', 'danger');
+                } finally {
+                    this.hideLoading(this.sendConfirmationsBtn);
+                }
+            }
+
+            async cancelConfirmations() {
+                if (!this.isConnected) {
+                    this.showAlert('WhatsApp não está conectado', 'warning');
+                    return;
+                }
+
+                const reason = prompt('Motivo do cancelamento:');
+                if (!reason) return;
+
+                if (!confirm(`Cancelar todos os agendamentos de hoje?\n\nMotivo: ${reason}`)) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.cancelConfirmationsBtn);
+                    
+                    const response = await fetch('/api/whatsapp/cancel-confirmations', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ reason })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert(`✅ ${result.data.cancelledCount} confirmações canceladas!`, 'success');
+                        this.loadLogs();
+                        this.loadTodayStats(); // Atualizar estatísticas
+                    } else {
+                        this.showAlert(`Erro ao cancelar confirmações: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao cancelar confirmações', 'danger');
+                } finally {
+                    this.hideLoading(this.cancelConfirmationsBtn);
+                }
+            }
+
+            async sendReportDaily() {
+                if (!this.isConnected) {
+                    this.showAlert('WhatsApp não está conectado', 'warning');
+                    return;
+                }
+
+                if (!confirm('Enviar relatório diário para o número do proprietário?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.sendReportDailyBtn);
+                    
+                    const response = await fetch('/api/whatsapp/send-report-daily', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('✅ Relatório diário enviado com sucesso!', 'success');
+                        this.loadLogs();
+                    } else {
+                        this.showAlert(`Erro ao enviar relatório: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao enviar relatório', 'danger');
+                } finally {
+                    this.hideLoading(this.sendReportDailyBtn);
+                }
+            }
+
+            async sendReportWeekly() {
+                if (!this.isConnected) {
+                    this.showAlert('WhatsApp não está conectado', 'warning');
+                    return;
+                }
+
+                if (!confirm('Enviar relatório semanal para o número do proprietário?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.sendReportWeeklyBtn);
+                    
+                    const response = await fetch('/api/whatsapp/send-report-weekly', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('✅ Relatório semanal enviado com sucesso!', 'success');
+                        this.loadLogs();
+                    } else {
+                        this.showAlert(`Erro ao enviar relatório: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao enviar relatório', 'danger');
+                } finally {
+                    this.hideLoading(this.sendReportWeeklyBtn);
+                }
+            }
+
+            async sendReportMonthly() {
+                if (!this.isConnected) {
+                    this.showAlert('WhatsApp não está conectado', 'warning');
+                    return;
+                }
+
+                if (!confirm('Enviar relatório mensal para o número do proprietário?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.sendReportMonthlyBtn);
+                    
+                    const response = await fetch('/api/whatsapp/send-report-monthly', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('✅ Relatório mensal enviado com sucesso!', 'success');
+                        this.loadLogs();
+                    } else {
+                        this.showAlert(`Erro ao enviar relatório: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao enviar relatório', 'danger');
+                } finally {
+                    this.hideLoading(this.sendReportMonthlyBtn);
+                }
+            }
+
+            async loadLogs() {
+                try {
+                    const response = await fetch('/api/whatsapp/logs');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.renderLogs(result.data);
+                    } else {
+                        this.logsContainer.innerHTML = '<div class="text-center text-danger">Erro ao carregar logs</div>';
+                    }
+                } catch (error) {
+                    console.error('Erro ao carregar logs:', error);
+                    this.logsContainer.innerHTML = '<div class="text-center text-danger">Erro ao carregar logs</div>';
+                }
+            }
+
+            renderLogs(logs) {
+                if (logs.length === 0) {
+                    this.logsContainer.innerHTML = '<div class="text-center text-muted">Nenhum log disponível</div>';
+                    return;
+                }
+
+                const logsHtml = logs.slice(-20).reverse().map(log => {
+                    const date = new Date(log.timestamp).toLocaleString('pt-BR');
+                    const typeClass = `log-${log.type}`;
+                    const typeIcon = this.getLogIcon(log.type);
+                    
+                    return `
+                        <div class="log-entry ${typeClass}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>${typeIcon} ${log.type.toUpperCase()}</strong>
+                                    <p class="mb-0 mt-1">${log.message}</p>
+                                </div>
+                                <small class="text-muted">${date}</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                this.logsContainer.innerHTML = logsHtml;
+            }
+
+            getLogIcon(type) {
+                const icons = {
+                    'info': '<i class="fas fa-info-circle"></i>',
+                    'success': '<i class="fas fa-check-circle"></i>',
+                    'warning': '<i class="fas fa-exclamation-triangle"></i>',
+                    'error': '<i class="fas fa-times-circle"></i>'
+                };
+                return icons[type] || '<i class="fas fa-circle"></i>';
+            }
+
+            async clearLogs() {
+                if (!confirm('Tem certeza que deseja limpar todos os logs?')) {
+                    return;
+                }
+
+                try {
+                    this.showLoading(this.clearLogsBtn);
+                    
+                    const response = await fetch('/api/whatsapp/clear-logs', {
+                        method: 'POST'
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        this.showAlert('Logs limpos com sucesso!', 'success');
+                        this.loadLogs();
+                    } else {
+                        this.showAlert(`Erro ao limpar logs: ${result.message}`, 'danger');
+                    }
+                } catch (error) {
+                    this.showAlert('Erro ao limpar logs', 'danger');
+                } finally {
+                    this.hideLoading(this.clearLogsBtn);
+                }
+            }
+
+            showAlert(message, type) {
+                const alertId = 'alert-' + Date.now();
+                const alertHtml = `
+                    <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
+                
+                document.getElementById('alertContainer').insertAdjacentHTML('beforeend', alertHtml);
+                
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    const alert = document.getElementById(alertId);
+                    if (alert) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+
+            showLoading(button) {
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+            }
+
+            hideLoading(button, originalText = null) {
+                button.disabled = false;
+                if (originalText) {
+                    button.innerHTML = originalText;
+                } else {
+                    // Restore original text based on button ID
+                    const originalTexts = {
+                        'connectBtn': '<i class="fas fa-plug"></i> Conectar',
+                        'disconnectBtn': '<i class="fas fa-unlink"></i> Desconectar',
+                        'generatePairingCodeBtn': '<i class="fas fa-key"></i> Gerar Código',
+                        'sendConfirmationsBtn': '<i class="fas fa-check-circle"></i> Enviar Confirmações do Dia',
+                        'cancelConfirmationsBtn': '<i class="fas fa-times-circle"></i> Cancelar Confirmações do Dia',
+                        'sendReportDailyBtn': '<i class="fas fa-calendar-day"></i> Relatório Diário',
+                        'sendReportWeeklyBtn': '<i class="fas fa-calendar-week"></i> Relatório Semanal',
+                        'sendReportMonthlyBtn': '<i class="fas fa-calendar-alt"></i> Relatório Mensal',
+                        'clearSessionBtn': '<i class="fas fa-trash"></i> Limpar Sessão',
+                        'clearLogsBtn': '<i class="fas fa-trash"></i> Limpar Logs'
+                    };
+                    button.innerHTML = originalTexts[button.id] || button.innerHTML;
+                }
+            }
+        }
+
+        // Initialize the admin panel when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new WhatsAppAdmin();
+        });
+    </script>
+</body>
+</html>
